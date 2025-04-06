@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jenkins-ingress
+  annotations:
+    ngrok.ingress.kubernetes.io/scheme: https
+spec:
+  ingressClassName: ngrok
+  rules:
+    - host: longhorn-national-monitor.ngrok-free.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jenkins
+                port:
+                  number: 8080
