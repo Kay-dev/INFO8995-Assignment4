@@ -9,7 +9,6 @@
         kind: Deployment
         metadata:
           name: jenkins
-          namespace: jenkins
 
   - name: "Remove jenkins service"
     k8s:
@@ -19,7 +18,7 @@
         kind: Service
         metadata:
           name: jenkins
-          namespace: jenkins
+          namespace: default
 
   - name: "Remove jenkins-jnlp service"
     k8s:
@@ -29,7 +28,7 @@
         kind: Service
         metadata:
           name: jenkins-jnlp
-          namespace: jenkins
+          namespace: default
 
   - name: "Remove jenkins persistent volume claim"
     k8s:
@@ -39,7 +38,7 @@
         kind: PersistentVolumeClaim
         metadata:
           name: jenkins-pvc
-          namespace: jenkins
+          namespace: default
 
   - name: "Remove jenkins persistent volume"
     k8s:
@@ -49,13 +48,7 @@
         kind: PersistentVolume
         metadata:
           name: jenkins-pv
-
-  - name: "Delete jenkins namespace"
-    k8s:
-      name: jenkins
-      api_version: v1
-      kind: Namespace
-      state: absent
+          namespace: default
 
   - name: "remove kubernetes python package"
     pip:

@@ -2,13 +2,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: jenkins-ingress
-  namespace: jenkins
   annotations:
     ngrok.ingress.kubernetes.io/scheme: https
 spec:
   ingressClassName: ngrok
   rules:
-    - host: concise-fox-remotely.ngrok-free.app
+    - host: mongrel-rapid-jointly.ngrok-free.app
       http:
         paths:
           - path: /

@@ -6,13 +6,6 @@
       name: kubernetes
       state: present
 
-  - name: "Create a new k8s namespace"
-    kubernetes.core.k8s:
-      name: jenkins
-      api_version: v1
-      kind: Namespace
-      state: present
-
   - name: "Deploy a new k8s persistent volume"
     kubernetes.core.k8s:
       state: present
@@ -40,7 +33,7 @@
         kind: PersistentVolumeClaim
         metadata:
           name: jenkins-pvc
-          namespace: jenkins
+          namespace: default
         spec:
           storageClassName: manual
           accessModes:
@@ -57,7 +50,7 @@
         kind: Service
         metadata:
           name: jenkins
-          namespace: jenkins
+          namespace: default
         spec:
           type: NodePort
           ports:
@@ -75,7 +68,7 @@
         kind: Service
         metadata:
           name: jenkins-jnlp
-          namespace: jenkins
+          namespace: default
         spec:
           type: ClusterIP
           ports:
@@ -92,7 +85,7 @@
         kind: Deployment
         metadata:
           name: jenkins
-          namespace: jenkins
+          namespace: default
         spec:
           replicas: 1
           selector:
@@ -103,6 +96,18 @@
               labels:
                 app: jenkins
             spec:
+              securityContext:
+                fsGroup: 1000
+                runAsUser: 1000
+              initContainers:
+                - name: init-jenkins-volume
+                  image: busybox
+                  command: ['sh', '-c', 'chown -R 1000:1000 /var/jenkins_home']
+                  volumeMounts:
+                    - name: jenkins-vol
+                      mountPath: /var/jenkins_home
+                  securityContext:
+                    runAsUser: 0
               containers:
                 - name: jenkins
                   image: jenkins/jenkins:lts
@@ -113,7 +118,7 @@
                       containerPort: 50000
                   volumeMounts:
                     - name: jenkins-vol
-                      mountPath: /var/jenkins_vol
+                      mountPath: /var/jenkins_home
                   resources:
                     limits:
                       memory: "2Gi"
