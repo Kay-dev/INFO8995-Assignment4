@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: jenkins-ingress
+  namespace: jenkins
   annotations:
     ngrok.ingress.kubernetes.io/scheme: https
 spec:
