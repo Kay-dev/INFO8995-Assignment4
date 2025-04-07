@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: ngrok
   rules:
-    - host: longhorn-national-monitor.ngrok-free.app
+    - host: concise-fox-remotely.ngrok-free.app
       http:
         paths:
           - path: /
